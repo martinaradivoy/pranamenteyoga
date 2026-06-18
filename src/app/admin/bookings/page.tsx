@@ -1,8 +1,8 @@
 import { prisma } from "@/lib/prisma";
 
-type BookingWithAvailability = Awaited<ReturnType<typeof prisma.booking.findMany>>[number];
 
 export default async function BookingsPage() {
+
   const bookings = await prisma.booking.findMany({
     orderBy: {
       createdAt: "desc",
@@ -33,7 +33,7 @@ export default async function BookingsPage() {
 
           ) : (
 
-            bookings.map((booking: any) => (
+            bookings.map((booking) => (
 
               <div
                 key={booking.id}
