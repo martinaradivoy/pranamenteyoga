@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("ADMIN")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+}
+
+
+
+model Availability {
+  id        String   @id @default(cuid())
+  startAt   DateTime
+  endAt     DateTime
+  isActive  Boolean  @default(true)
+  booking   Booking?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive])
+  @@index([startAt])
+  @@index([createdAt])
+}
+
+
+
+model Booking {
+
+  id String @id @default(cuid())
+
+  availabilityId String @unique
+
+  availability    Availability @relation(fields: [availabilityId], references: [id], onDelete: Cascade)
+
+  name String
+
+  email String
+
+  phone String
+
+  comment String?
+
+  status String @default("CONFIRMED")
+
+  createdAt DateTime @default(now())
+
+}
