@@ -39,7 +39,7 @@ if (!result.success) {
         </div>
 
         <div className="mt-10 grid gap-6 md:grid-cols-2">
-          {availabilities.map((slot) => {
+          {availabilities.map((slot: any) => {
             const dateLabel = slot.startAt.toLocaleDateString("es-AR", {
               timeZone: "America/Argentina/Buenos_Aires",
             });
