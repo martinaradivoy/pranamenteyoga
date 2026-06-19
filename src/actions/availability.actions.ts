@@ -23,7 +23,7 @@ export async function createAvailability(data: {
   if (!validation.success) {
     return errorResponse(
       validation.error.issues
-        .map((issue: any) => `${issue.path.join(".")}: ${issue.message}`)
+        .map((issue) => `${issue.path.join(".")}: ${issue.message}`)
         .join("; ")
     );
   }
@@ -107,6 +107,24 @@ export async function toggleAvailabilityStatus(id: string) {
   } catch (error) {
     console.error("[toggleAvailabilityStatus]", error);
     return errorResponse("Error actualizando disponibilidad");
+  }
+}
+
+export async function getAllAvailabilities() {
+  try {
+    const availabilities = await prisma.availability.findMany({
+      include: {
+        booking: true,
+      },
+      orderBy: {
+        startAt: "asc",
+      },
+    });
+
+    return successResponse(availabilities);
+  } catch (error) {
+    console.error("[getAllAvailabilities]", error);
+    return errorResponse("Error obteniendo disponibilidades");
   }
 }
 

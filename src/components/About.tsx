@@ -10,9 +10,12 @@ export default function About() {
           </h2>
 
           <p className="max-w-xl text-slate-600 leading-8">
-            Soy profesora de yoga con una mirada cercana, uniendo respiración,
-            movimiento y presencia. Mis clases están pensadas para que te sientas
-            cómodo, conectado y renovado.
+             Soy Lourdes, profesora de Yoga Integral.
+
+             En mis clases trabajamos la fuerza, el equilibrio, la elongación y, sobre todo, la respiración. Creo que cada práctica es única, por eso busco crear un espacio cómodo y seguro donde cada alumno pueda conectar con su cuerpo, escuchar sus necesidades y transitar su propio proceso.
+
+             Me gusta acompañar desde la presencia y el respeto, entendiendo el yoga como una herramienta para encontrarnos con nosotros mismos y habitar el momento presente.
+             No importa la experiencia previa: cada persona puede acercarse al yoga desde su propio lugar y a su propio ritmo.
           </p>
 
           <div className="grid gap-4 sm:grid-cols-2">

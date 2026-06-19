@@ -6,10 +6,30 @@ import { z } from "zod";
 
 const bookingSchema = z.object({
   availabilityId: z.string().min(1, "ID de disponibilidad requerido"),
-  name: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
-  email: z.string().email("Email inválido"),
-  phone: z.string().min(6, "Teléfono inválido"),
-  comment: z.string().optional(),
+
+  name: z
+    .string()
+    .trim()
+    .min(2, "El nombre debe tener al menos 2 caracteres")
+    .max(100, "Nombre demasiado largo"),
+
+  email: z
+    .string()
+    .trim()
+    .email("Email inválido")
+    .max(255, "Email demasiado largo"),
+
+  phone: z
+    .string()
+    .trim()
+    .min(6, "Teléfono inválido")
+    .max(30, "Teléfono demasiado largo"),
+
+  comment: z
+    .string()
+    .trim()
+    .max(1000, "Comentario demasiado largo")
+    .optional(),
 });
 
 export async function createBooking(data: {
@@ -24,7 +44,7 @@ export async function createBooking(data: {
   if (!validation.success) {
     return errorResponse(
       validation.error.issues
-        .map((issue: any) => `${issue.path.join(".")}: ${issue.message}`)
+        .map((issue) => `${issue.path.join(".")}: ${issue.message}`)
         .join("; ")
     );
   }
@@ -43,12 +63,16 @@ export async function createBooking(data: {
       return errorResponse("Horario no encontrado");
     }
 
-    if (availability.booking) {
-      return errorResponse("Este horario ya fue reservado");
+    if (availability.startAt < new Date()) {
+      return errorResponse("Este horario ya no está disponible");
     }
 
     if (!availability.isActive) {
       return errorResponse("Este horario no está disponible");
+    }
+
+    if (availability.booking) {
+      return errorResponse("Este horario ya fue reservado");
     }
 
     const booking = await prisma.booking.create({
@@ -62,9 +86,18 @@ export async function createBooking(data: {
     });
 
     return successResponse(booking);
-  } catch (error) {
+  } catch (error: any) {
     console.error("[createBooking]", error);
-    return errorResponse("No se pudo crear la reserva");
+
+    if (error?.code === "P2002") {
+      return errorResponse(
+        "Este horario acaba de ser reservado por otra persona"
+      );
+    }
+
+    return errorResponse(
+      "No se pudo crear la reserva. Intentá nuevamente."
+    );
   }
 }
 
