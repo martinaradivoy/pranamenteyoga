@@ -121,7 +121,13 @@ export async function getAllAvailabilities() {
       },
     });
 
+    console.log(
+      "AVAILABILITIES:",
+      JSON.stringify(availabilities, null, 2)
+    );
+
     return successResponse(availabilities);
+
   } catch (error) {
     console.error("[getAllAvailabilities]", error);
     return errorResponse("Error obteniendo disponibilidades");
